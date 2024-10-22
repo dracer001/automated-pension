@@ -14,7 +14,7 @@ define('SECRET_KEY', 'Pa$$w0r>');
 if($_SERVER['SERVER_NAME'] == 'localhost')
 {
 	//database config for local server
-	define('DBHOST', 'localhost:3309');
+	define('DBHOST', 'localhost:3306');
 	define('DBNAME', 'DracerCorp');
 	define('DBUSER', 'root');
 	define('DBPASS', 'root');
@@ -25,7 +25,7 @@ if($_SERVER['SERVER_NAME'] == 'localhost')
 }else
 {
 	//database config for live server
-	define('DBHOST', 'localhost:3309');
+	define('DBHOST', 'localhost:3306');
 	define('DBNAME', 'DracerCorp');
 	define('DBUSER', 'root');
 	define('DBPASS', 'root');
