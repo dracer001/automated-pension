@@ -105,6 +105,7 @@ function displayEmployeeQuery(displayId, query="") {
             template.querySelector(".sex").innerText = employee.sex;
             template.querySelector(".email").innerText = employee.email;
             template.querySelector(".employment_status").innerText = employee.employment_status;
+            template.addEventListener("click", ()=>{displayEmployeeInfo(template)});
             console.log(template);
             queryParent.appendChild(template);
         })

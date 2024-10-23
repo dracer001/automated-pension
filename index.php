@@ -2,6 +2,7 @@
 
 require_once "config.php";
 require_once "autoLoader.php";
+require_once "controllers/globalFunctions.php";
 
 ?>
 
@@ -40,7 +41,7 @@ require_once "autoLoader.php";
         <span class="spinner-grow spinner-grow-sm text-secondary" role="status"></span>
     </div>
 
-    <nav class="navbar navbar-light bg-light fixed-top">
+    <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="<?=ROOT?>" id="root-link">
             <img src="<?=ROOT?>/assets/images/dracer-corp-logo.png" alt="" width="50" height="34" class="d-inline-block align-text-top">
@@ -79,7 +80,9 @@ require_once "autoLoader.php";
                     redirect("");
                 } 
                 $employeeController = new EmployeeController(Auth::getUser_id("employee_id"));
-                $employee = $employeeController->getEmployeewithJobs();
+                $employee = $employeeController->getEmployeewithPensionwithJobs();
+                $job_amount = calculatePensionAmount($employee->jobs, new Jobs());
+                $employee->pension_allowance = $job_amount;
                 require_once "views/employee.view.php";
                 break;
             

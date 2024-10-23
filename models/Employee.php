@@ -19,8 +19,16 @@ class Employee extends Database
         'sex',
     ];
 
-    // public function getJobs($employee_id)
-    // {
-    //     $jobDB = new Jobs
-    // }
+    public function updatePensionStatus($employee_id)
+    {
+        return $this->query("
+            UPDATE `pensioneer`
+            INNER JOIN `employee` USING(`employee_id`)
+            SET `pensioneer`.`pension_status` = 'eligible',
+                `pensioneer`.`start_date` = NOW()
+            WHERE `employee`.`employment_status` = 'retired'
+            AND TIMESTAMPDIFF(YEAR, `employee`.`employment_date`, `employee`.`terminated_date`) > 40
+            AND `employee`.`employee_id` = $employee_id;
+        ");
+    }
 }

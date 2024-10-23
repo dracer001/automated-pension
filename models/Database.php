@@ -188,6 +188,13 @@ class Database
 	
 		return $this->query($query, $data); 
 	}
+
+	public function delete($field, $id)
+	{ 
+		$query = "DELETE FROM `$this->table` WHERE `$field` = $id;";
+		return $this->query($query); 
+	}
 	
+
 
 }

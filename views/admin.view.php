@@ -64,9 +64,9 @@
                 </div>
             </div>
             <div class="other-links">
-                <button class="btn btn-outline-info w-100 mt-5">change password</button><br>
+                <button class="btn btn-outline-info w-100 mt-5 page-btn" data-page="change-password" id="change-password-btn">change password</button><br>
                 <?php if($admin->role == "super_admin"):?>
-                <button class="btn btn-outline-info w-100 my-3"><i class="bi bi-plus"></i> add admin</button>
+                <button class="btn btn-outline-info w-100 my-3 page-btn" id="add-admin-btn" data-page="add-admin"><i class="bi bi-plus"></i> add admin</button>
                 <?php endif ?>
             </div>
         </div>
@@ -124,6 +124,46 @@
                 </div>
             </div>
             
+            <div id="add-admin" class="page d-none mt-5">
+                <fieldset class="form border shadow rounded-3 p-4">
+                    <legend class="text-info mb-3">Add Admin User</legend>
+                    <form class="add-admin-form">
+                        <div class="form-group mb-3">
+                            <label for="username" class="form-label">Admin Username</label>
+                            <input type="text" class="form-control required" name="username" placeholder="input the admin username">
+                            <div class="invalid-feedback">Error message here</div>
+                        </div>
+                        <button class="btn btn-success save-admin-btn">Add</button>
+                    </form>
+                </fieldset>
+                <div class="server-message border rounded-3 p-4 mt-3"></div>
+            </div>
+
+            <div id="change-password" class="page d-none mt-5">
+                <fieldset class="border rounded-3 shadow p-4">
+                    <legend class="text-info mb-3">Change Password</legend>
+                    <form class="change-password-form">
+                        <div class="form-group mb-3">
+                            <label for="old_password" class="form-label">Input Old Password</label>
+                            <input type="password" class="form-control required" name="old_password">
+                            <div class="invalid-feedback">Error message here</div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="new_password" class="form-label">Input New Password</label>
+                            <input type="password" class="form-control required" name="new_password">
+                            <div class="invalid-feedback">Error message here</div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="confirm_password" class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control required" name="confirm_password">
+                            <div class="invalid-feedback">Error message here</div>
+                        </div>
+                        <button class="btn btn-success save-password-btn">Save</button>
+                    </form>
+                </fieldset>
+
+            </div>
+
             <div class="page d-none mt-5" id="employee">
                 <fieldset class="border rounded-3 shadow mb-3 p-3">
                     <legend class="text-info">Contact Info</legend>
@@ -288,7 +328,7 @@
                 <div class="action-btns">
                     <button class="btn btn-success save-btn" id="save-employee-btn">Save</button>
                     <button class="btn btn-secondary edit-employee-btn change-btn" data-action="edit">Edit</button>
-                    <button class="btn btn-danger delet-employee-btn change-btn">Delete</button>
+                    <button class="btn btn-danger delete-employee-btn change-btn">Delete</button>
                 </div>
             </div>
 
@@ -389,6 +429,8 @@
 </main>
 
 <script src="<?=ROOT?>/static/js/employeeQuery.js"></script>
+<script src="<?=ROOT?>/static/js/viewEmployee.js"></script>
 <script src="<?=ROOT?>/static/js/employeeCrud.js"></script>
 <script src="<?=ROOT?>/static/js/editEmployee.js"></script>
+<script src="<?=ROOT?>/static/js/deleteEmployee.js"></script>
 <script src="<?=ROOT?>/static/js/admin.js"></script>

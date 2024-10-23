@@ -30,85 +30,6 @@ document.getElementById("add-employee-btn").addEventListener("click", (event)=>{
 
 
 
-document.querySelectorAll(".view-employee-btn").forEach(btn =>{
-    btn.addEventListener("click", ()=>{
-        let employee_info = btn.getAttribute("data-info");
-        console.log(employee_info);
-        employee_info = JSON.parse(employee_info);
-        console.log(employee_info);
-        sessionStorage.setItem("employee_id", employee_info.employee_id);
-        document.querySelectorAll(".employee-form").forEach(form => {
-            for (let key in employee_info) {
-                let date_trial = formatDate(employee_info[key]);
-                if (key.endsWith("date") && date_trial ) {
-                    employee_info[key]  = date_trial
-                }
-
-                let inputField = form.querySelector(`input[name="${key}"]:not([type="radio"])`);
-                if (inputField) { // Check if the input field exists
-                    inputField.value = employee_info[key];
-                    inputField.readOnly = true;
-                }
-                inputField = form.querySelectorAll(`input[name="${key}"][type="radio"]`);
-                if (inputField) { // Check if the input field exists
-                    for (const input of inputField) {
-                        input.disabled = true;
-                        if (input.value == employee_info[key]) {
-                            input.checked = true;
-                        }                 
-                    }
-                }
-                inputField = form.querySelector(`select[name="${key}"]`);
-                if (inputField) { // Check if the input field exists
-                    inputField.value = employee_info[key];
-                    inputField.disabled = true;
-                }
-            }
-        });
-        let employeeJobs = employee_info.jobs;
-        let jobContainer = document.querySelector(".job-info");
-        let job_amount = 0;
-        employeeJobs.forEach(job=>{
-            let jobFormTemplate = jobFormModel.cloneNode(true);
-            jobFormTemplate.id="";
-            jobFormTemplate.classList.remove("demo");
-            console.log(job)
-            for (let key in job) {
-                let date_trial = formatDate(job[key]);
-                if (key.endsWith("date") && date_trial ) {
-                    job[key]  = date_trial
-                }
-                let inputField = jobFormTemplate.querySelector(`input[name="${key}"]`);
-                if (inputField) {
-                    inputField.value = job[key];
-                    inputField.readOnly = true
-                }
-                inputField = jobFormTemplate.querySelector(`select[name="${key}"]`);
-                if (inputField) { // Check if the input field exists
-                    inputField.value = job[key];
-                    inputField.disabled = true;
-                }
-                let id_el = document.createElement("input");
-                id_el.type="hidden";
-                id_el.name="job_id";
-                id_el.value=job.job_id;
-                jobFormTemplate.appendChild(id_el);
-            }
-            jobContainer.appendChild(jobFormTemplate);
-            let percentageAmount = job.pension_percentage * job.salary;
-            let working_months = getMonthsDifference(job.start_date, job.end_date)
-            job_amount += working_months*percentageAmount/100;
-        })
-        document.getElementById("accumulated-amount").value=job_amount.toFixed(2);
-        let payment_percentage = document.querySelector("input[name='payment_percentage']").value;
-        document.getElementById("monthly-amount").value=(job_amount*payment_percentage/100).toFixed(2);
-
-        displayPage({loc:"admin-", pageId: "employee", afterEffect:employeePageSetup("view")})
-    })
-})
-
-
-
 function employeePageSetup(action){
     sessionStorage.setItem('page-action', action);
     document.querySelectorAll(".employee-form").forEach(form =>{
@@ -177,11 +98,6 @@ function displayNullError(form, query){
 }
 
 
-function addEmployee(params) {
-    
-}
-
-
 document.querySelector("#pension-settings-btn").addEventListener("click", (event)=>{
     event.preventDefault();
     const form = document.getElementById("payment-settings-form");
@@ -228,4 +144,73 @@ document.querySelector("#pension-settings-btn").addEventListener("click", (event
 })
 
 
+document.querySelector("#add-admin-btn").addEventListener("click", (event)=>{
+    displayPage({loc:"admin-", event:event});
+})
+document.querySelector("#change-password-btn").addEventListener("click", (event)=>{
+    displayPage({loc:"admin-", event:event});
+})
 
+
+document.querySelector(".save-admin-btn").addEventListener("click", (e)=>{
+
+    e.preventDefault();
+    const form = document.querySelector(".add-admin-form");
+
+    clearErrors(form);
+    document.querySelector(".server-message").innerHTML = "";
+    if(displayNullError(form, "input")) return;
+    showLoader(document.body);
+    formData = new FormData(form);
+    sendJsonForm(formData, "/controllers/admin/addAdmin.php", (response)=>{
+        hideLoader(document.body);
+        console.log(response);
+        if (response?.success) {
+            notify("success", "admin user added successfuly!")
+            displayAdminInfo(response.data);
+        }else if(response?.message){
+            notify("error", response.message);
+        }else{
+            notify("error", "error occured with server, please try again!");
+        }
+    }, ()=>{
+        hideLoader(document.body);
+        notify("error", "error occured with server, please try again!");
+    })
+})
+
+document.querySelector(".save-password-btn").addEventListener("click", (e)=>{
+    const form = document.querySelector(".change-password-form");
+    e.preventDefault();
+    clearErrors(form);
+    if(displayNullError(form, "input")) return;
+    let new_pwd = form.querySelector("[name=new_password]");
+    let confirm_pwd = form.querySelector("[name=confirm_password]");
+    if (new_pwd.value !== confirm_pwd.value) {displayError(confirm_pwd, "password do not match"); return;}
+    showLoader(document.body);
+
+    formData = new FormData(form);
+    sendJsonForm(formData, "/controllers/admin/changePassword.php", (response)=>{
+        hideLoader(document.body);
+        console.log(response);
+        if (response?.success) {
+            notify("success", "password updated successfuly!")
+        }else if(response?.message){
+            notify("error", response.message);
+        }else{
+            notify("error", "error occured with server, please try again!");
+        }
+    }, ()=>{
+        hideLoader(document.body);
+        notify("error", "error occured with server, please try again!");
+    })
+})
+
+
+function displayAdminInfo(info) {
+    let htmlText = "<h5 class='text-center'>Admin Info</h5>";
+    for (const key in info) {
+        htmlText += `<span class="fw-bold">${key}: ${info[key]}</span> <br>`;
+    }
+    document.querySelector(".server-message").innerHTML = htmlText;
+}
