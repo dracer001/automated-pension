@@ -17,7 +17,7 @@ if($_SERVER['SERVER_NAME'] == 'localhost')
 	define('DBHOST', 'localhost:3309');
 	define('DBNAME', 'DracerCorp');
 	define('DBUSER', 'root');
-	define('DBPASS', 'root');
+	define('DBPASS', '');
 	define('DBDRIVER', 'mysql');
 
 	//root path e.g localhost/
@@ -25,10 +25,10 @@ if($_SERVER['SERVER_NAME'] == 'localhost')
 }else
 {
 	//database config for live server
-	define('DBHOST', 'localhost:3309');
+	define('DBHOST', 'localhost:3306');
 	define('DBNAME', 'DracerCorp');
 	define('DBUSER', 'root');
-	define('DBPASS', 'root');
+	define('DBPASS', '');
 	define('DBDRIVER', 'mysql');
 
 	//root path e.g https://www.yourwebsite.com
